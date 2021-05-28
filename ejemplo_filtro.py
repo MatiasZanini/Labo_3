@@ -17,7 +17,7 @@ w, h = signal.freqs(b, a)
 
 #Ploteo
 plt.semilogx(w, 20 * np.log10(abs(h)))
-plt.title('Butterworth filter frequency response')
+plt.title('Respuesta en frecuencia del filtro Butterworth')
 plt.xlabel('Frequency [radians / second]')
 plt.ylabel('Amplitude [dB]')
 plt.grid(which='both', axis='both')
@@ -37,25 +37,31 @@ medicion = datos['medicion']
 
 fs = 1/np.mean(np.diff(tiempo)) # frecuencia de sampleo media 
 cutoff = 20  # Hz
+tipo = 'low'
+orden_s1 = 20
+
+orden_s2 = 1
+
 
 #acá implemento el filtro y genero la señal filtrada
-sos = signal.butter(2, cutoff, 'low', fs = fs, output='sos')
+sos = signal.butter(orden_s1, cutoff, tipo, fs = fs, output='sos')
 filtered = signal.sosfilt(sos, medicion)
 
-sos = signal.butter(1, cutoff, 'low', fs = fs, output='sos')
+sos = signal.butter(orden_s2, cutoff, 'low', fs = fs, output='sos')
 filtered1 = signal.sosfilt(sos, medicion)
 
 plt.close('all')
 plt.figure(5)
 plt.subplot(2,1,1)
 plt.plot(tiempo , medicion, label = 'Señal original')
-plt.plot(tiempo , filtered1, label = 'Señal filtrada (orden 1)')
-plt.plot(tiempo , filtered, label = 'Señal filtrada (orden 2)')
+plt.plot(tiempo , filtered1, label = 'Señal filtrada (orden {})'.format(orden_s2))
+plt.plot(tiempo , filtered, label = 'Señal filtrada (orden {})'.format(orden_s1))
 plt.xlabel('Tiempo [s]')
 plt.ylabel('Amplitud [V]')
 plt.grid(b=True)
 plt.ylim(0.18,0.7)
 plt.legend() #esto le pone leyenda al gráfico, mira lo que yo definí como "label" en cada curva
+
 
 sos_high = signal.butter(1, cutoff, 'high', fs = fs, output='sos')
 filtered_high = signal.sosfilt(sos_high, medicion)
@@ -63,13 +69,13 @@ filtered_high = signal.sosfilt(sos_high, medicion)
 #otra manera de implementarlo
 #B, A           = signal.butter(4, 40 / (fs / 2), btype='high') 
 #medicion_hig1  = signal.lfilter(B, A, medicion      , axis=0)
-
 plt.subplot(2,1,2)
-plt.plot(tiempo , filtered_high)
+plt.plot(tiempo , filtered_high, label='Filtro pasa-altos')
 plt.grid(b=True)
 plt.xlabel('Tiempo [s]')
 plt.ylabel('Amplitud [V]')
-plt.ylim(-0.05,0.05)
+plt.legend()
+#plt.ylim(-0.05,0.05)
 
 plt.tight_layout()
 
@@ -90,10 +96,65 @@ plt.grid(b=True)
 #filtro
 fs = 1/np.mean(np.diff(x)) # frecuencia de sampleo media 
 cutoff = 30 # Hz
-sos = signal.butter(5, cutoff, 'high', fs = fs, output='sos')
+tipo = 'high'  # 'high' para pasa-altos y 'low' para pasa-bajos
+
+sos = signal.butter(5, cutoff, tipo, fs = fs, output='sos')
 filtered = signal.sosfilt(sos, senhal + noise)
 
 #plot de la señal sin filtrar y filtrada
 plt.plot(x,senhal + noise,'.-')
 plt.plot(x, filtered,'.-')
 plt.grid(b=True)
+
+
+
+
+
+#%% Jugamos a romper una onda cuadrada
+
+t = np.linspace(0,1,10000)
+
+frec = 5 # Hz
+
+señal = signal.square(2 * np.pi * frec * t)
+
+fs = 1/np.mean(np.diff(t)) # frecuencia de sampleo media 
+
+cutoff = 25  # Hz (podemos probar que pasa a frec, 3*frec, 5*frec)
+
+tipo = 'low'
+
+orden_s1 = 5
+
+orden_s2 = 1
+
+
+#acá implemento el filtro y genero la señal filtrada
+sos = signal.butter(orden_s1, cutoff, tipo, fs = fs, output='sos')
+filtered = signal.sosfilt(sos, señal)
+
+sos = signal.butter(orden_s2, cutoff, 'low', fs = fs, output='sos')
+filtered1 = signal.sosfilt(sos, señal)
+
+plt.close('all')
+plt.figure(5)
+plt.subplot(2,1,1)
+plt.plot(t , señal, label = 'Señal original')
+plt.plot(t , filtered1, label = 'Señal filtrada (orden {})'.format(orden_s2))
+plt.plot(t , filtered, label = 'Señal filtrada (orden {})'.format(orden_s1))
+plt.xlabel('Tiempo [s]')
+plt.ylabel('Amplitud [V]')
+plt.grid(b=True)
+
+plt.legend() 
+
+
+
+
+
+
+
+
+
+
+
