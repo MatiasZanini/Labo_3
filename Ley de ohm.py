@@ -3,10 +3,11 @@
 Editor de Spyder
 
 Creado por Adriana Márquez
+Editado por Matías Zanini
 Análisis de mediciones de V0, V1 e I para estudiar el comportamiento VvsI de una resistencia
 y por ley de OHM obtener el valor de R
 """
-#cargamos las librerias de python que necesistmos:
+# cargamos las librerias de python que necesistmos:
 import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
