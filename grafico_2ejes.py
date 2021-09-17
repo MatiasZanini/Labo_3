@@ -41,9 +41,9 @@ Esto lo hacemos con la propiedad .twinx() :
 
 ax2 = ax1.twinx()
 
-color = 'tab:blue' # Definimos una variable con el color azul
+color2 = 'tab:blue' # Definimos una variable con el color azul
 
-ax2.set_ylabel('sin', color=color) # Le ponemos nombre al nuevo eje y.
+ax2.set_ylabel('sin', color=color2) # Le ponemos nombre al nuevo eje y.
 
 '''
 Ahora, como todavía no pedimos que nos muestre la figura, podemos pedirle
@@ -51,9 +51,9 @@ a python que grafique el segundo par de ejes x e y en la misma figura.
 Hacemos esto con ax2.plot():
 '''
 
-ax2.plot(t, data2, color=color)
+ax2.plot(t, data2, color=color2)
 
-ax2.tick_params(axis='y', labelcolor=color) # Le ponemos color a la etiqueta.
+ax2.tick_params(axis='y', labelcolor=color2) # Le ponemos color a la etiqueta.
 
 fig.tight_layout()  # Ajustamos la figura para que no se nos corte el eje y.
 
