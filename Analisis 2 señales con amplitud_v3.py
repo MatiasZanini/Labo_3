@@ -236,7 +236,7 @@ resultado óptimo.
 
 En este caso, el programa de Arduino, provee dichos guess que podemos darle
 al algoritmo. Sin embargo, podría pasar que durante su obtención, Arduino
-se equivoque y el ajuste no funcione.
+se equivoque y el ajuste no funcione. También podría calcular mal la fase.
 
 Si este fuera el caso, pueden probar descomentar el bloque de código titulado
 "obtención alternativa de guess para el ajuste". Dicho bloque, intentará 
@@ -279,8 +279,8 @@ guess_phi1 = fase1
 guess_parameters1 = [guess_amplitude1, guess_omega1, guess_offset1, guess_phi1]
 
 '''
-Si el ajuste dio mal, probar descomentar el siguiente bloque y otro que se
-encuentra más abajo.
+Si el ajuste o la diferencia de fase dio mal, probar descomentar el siguiente 
+bloque y otro que se encuentra más abajo.
 Luego, ejecutar nuevamente código desde el bloque siguiente:
 '''  
 # #%% --------------- Obtención alternativa de guess para el ajuste ------------------------
@@ -322,17 +322,19 @@ Luego, ejecutar nuevamente código desde el bloque siguiente:
 
 #     iper = round(np.mean([(periodos[i+1]-periodos[i]) for i in range(len(periodos)-1)]))
     
-#     return tper, iper
+#     return tper, iper, periodos
 
-# tper, iper = periodo(x1,y1)
+
+# # tper = periodo, iper = cant de puntos en un periodo, maxs = indices de los máximos:
+# tper, iper, maxs = periodo(x1,y1) 
 
 # guess_amplitude1 = (max(y1)-min(y1))/2
 # guess_omega1 = 2*np.pi/tper
 # guess_offset1 = valormedio1
-# guess_phi1 = fase1
+# guess_phi1 = -2*np.pi/tper*x1[maxs[0]]
 # guess_parameters1 = [guess_amplitude1, guess_omega1, guess_offset1, guess_phi1]
 
-
+# --------
 
 # Ajuste para la señal V1:
 res_lsq1 = least_squares(get_residuals, guess_parameters1, args=(y1,x1),method='trf')
@@ -381,14 +383,14 @@ guess_parameters2 = [guess_amplitude2, guess_omega2, guess_offset2, guess_phi2]
 
 # Descomentar lo siguiente si se corre la obtención alternativa de guess:
 
-# tper2, iper2 = periodo(x2,y2)
+# tper2, iper2, maxs2 = periodo(x2,y2)
 # guess_amplitude2 = (max(y2)-min(y2))/2
 # guess_omega2 = 2*np.pi/tper2
 # guess_offset2 = valormedio2
-# guess_phi2 = fase2
+# guess_phi2 = -2*np.pi/tper2*x2[maxs[0]]
 # guess_parameters2 = [guess_amplitude2, guess_omega2, guess_offset2, guess_phi2]
 
-
+# # ---------
 
 
 
