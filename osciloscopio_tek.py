@@ -161,11 +161,12 @@ class osciloscopio_tek():
         indica el estado de cada canal. 1 encendido, 0 apagado.
         '''
         
-        ch1, ch2, ch3, ch4, mat, refa, refb, refc, refd = self.osci.query('SEL?').split(';')
+        fft, ch1, ch2, mat, refa, refb = self.osci.query('SEL?').split(';')
         
-        refd = refd.replace('\n', '')
+        refb = refb.replace('\n', '')
         
-        return ch1, ch2, ch3, ch4, mat, refa, refb, refc, refd
+        return ch1, ch2, mat, refa, refb
+
     
     def error_canal(self):
         
