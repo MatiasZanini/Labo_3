@@ -9,6 +9,7 @@ from osciloscopio_tek import osciloscopio_tek as tek
 import time
 from glob import glob
 import numpy as np
+import matplotlib.pyplot as plt
 
 #%%
 
@@ -127,8 +128,6 @@ for k in range(cant_med):
         filename = path + nombre +' {}.txt'.format(num_str)
         
         np.savetxt(filename, data, delimiter=',', header='t1, V1, t2, V2')
-        
-        data.to_csv(filename)
     
         
     time.sleep(espera)
@@ -138,8 +137,6 @@ print('Fin de las mediciones. Cerrando comunicacion con el osciloscopio...')
 osci.cerrar()
 
 print('Comunicacion con el osciloscpio terminada.')
-
-
 
 
 
