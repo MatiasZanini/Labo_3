@@ -94,11 +94,11 @@ def medir_all():
 #medicion en multiples canales
 
 #direccion de la carpeta donde se guardaran los datos
-path = 'C:/Users/Matias/Documents/GitHub/Doctorado/Mediciones/20210408/'
+path = 'D:/nuestras carpetas/Mati/Ayudante/UBA/Labo 3 - 2C 2021/datos/'
 
-nombre = 'CO_alta' # Nombre raíz del archivo donde se guardaran los datos.
+nombre = 'dos_señales' # Nombre raíz del archivo donde se guardaran los datos.
 
-cant_med = 20 # Cantidad de veces que quieren medir.
+cant_med = 1 # Cantidad de veces que quieren medir.
 
 iniciar_desde = 1 # Desde donde comienza la numeración de los archivos.
 
@@ -137,6 +137,42 @@ print('Fin de las mediciones. Cerrando comunicacion con el osciloscopio...')
 osci.cerrar()
 
 print('Comunicacion con el osciloscpio terminada.')
+
+
+#%%  ------------------- Gráfico de la última señal medida ----------------------------
+
+t1 = data[:,0] # Tiempo de la señal V1  
+V1 = data[:,1] # V1
+
+t2  =data[:,2] # Tiempo de la señal V2   
+V2 = data[:,3] # V2
+
+
+# Grafico los datos seleccionados para analizar
+
+plt.close("all")
+plt.figure(1)
+plt.plot(t1, V1,'.-g', label='Señal 1')
+plt.plot(t2, V2,'.-b', label='Señal 2')
+#plt.grid('on'); # Descomentar si quieren que tenga la grilla.
+plt.xlabel('tiempo (s)')
+plt.ylabel('Voltaje (V)')
+plt.legend()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
