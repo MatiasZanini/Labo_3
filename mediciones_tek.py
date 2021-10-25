@@ -119,13 +119,13 @@ for k in range(cant_med):
         
         filename = files[len(files)-1]
         
-        np.savetxt(filename + ' (nuevo)', data, delimiter=',', header='t1, V1, t2, V2')
+        np.savetxt(filename + ' (nuevo)', data, delimiter=',', header='t, V1, V2')
         
     else:
         
         filename = path + nombre +' {}.txt'.format(num_str)
         
-        np.savetxt(filename, data, delimiter=',', header='t1, V1, t2, V2')
+        np.savetxt(filename, data, delimiter=',', header='t, V1, V2')
     
         
     time.sleep(espera)
