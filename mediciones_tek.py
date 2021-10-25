@@ -72,15 +72,13 @@ def medir_all():
     
     print('Todos los canales adquiridos correctamente')
     
-    t1 = np.asarray(data[0])
+    t = np.asarray(data[0])
     
     V1 = np.asarray(data[1])
     
-    t2 = np.asarray(data[2])
-    
     V2 = np.asarray(data[3])
     
-    data_array = np.array([t1, V1, t2, V2])
+    data_array = np.array([t, V1, V2])
     
     osci.adquirir()
     
@@ -141,10 +139,10 @@ print('Comunicacion con el osciloscpio terminada.')
 
 #%%  ------------------- Gráfico de la última señal medida ----------------------------
 
-t1 = data[:,0] # Tiempo de la señal V1  
-V1 = data[:,1] # V1
+t = data[:,0] # Tiempo  
 
-t2  =data[:,2] # Tiempo de la señal V2   
+V1 = data[:,1] # V1
+  
 V2 = data[:,3] # V2
 
 
@@ -152,8 +150,8 @@ V2 = data[:,3] # V2
 
 plt.close("all")
 plt.figure(1)
-plt.plot(t1, V1,'.-g', label='Señal 1')
-plt.plot(t2, V2,'.-b', label='Señal 2')
+plt.plot(t, V1,'.-g', label='Señal 1')
+plt.plot(t, V2,'.-b', label='Señal 2')
 #plt.grid('on'); # Descomentar si quieren que tenga la grilla.
 plt.xlabel('tiempo (s)')
 plt.ylabel('Voltaje (V)')
