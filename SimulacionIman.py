@@ -32,13 +32,15 @@ Posición en milímetros [mm]
 Campo en militeslas [mT]
 '''
 
+corriente = 10 # Corriente de la bobina en Ampere
+
 # Modelo simplificado:
 
 coil1 = magpy.Collection() # Definimos el objeto para la Bobina 1
 
 for z in np.linspace(-8, 8, 16):
     
-    winding = magpy.current.Loop(current=100, diameter=10, position=(0,0,z) ) # Definimos el devanado de la bobinas
+    winding = magpy.current.Loop(current=corriente, diameter=10, position=(0,0,z) ) # Definimos el devanado de la bobinas
     
     coil1.add(winding)
 
@@ -50,7 +52,7 @@ ts = np.linspace(-8, 8, 1000)
 
 vertices = np.c_[5*np.cos(ts*2*np.pi), 5*np.sin(ts*2*np.pi), ts] # Parametrizamos una espiral
 
-coil2 = magpy.current.Line(current=100, vertices=vertices) # Creamos una fuente de corriente lineal con la forma de espiral
+coil2 = magpy.current.Line(current=corriente, vertices=vertices) # Creamos una fuente de corriente lineal con la forma de espiral
 
 coil2.show()
 
