@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from IPython import get_ipython
 import magpylib as magpy
 import statsmodels.api as sm
+import os
 
 
 #%%
@@ -129,6 +130,7 @@ pm=magpy.magnet.Cylinder(magnetization=[0,0,1000], dimension = [15,5]) # dimensi
 print('magnatización',pm.magnetization) # Output: [0. 0. 1000.]
 print('dimensiones',pm.dimension) # Output: [15. 5.]
 print('posición',pm.position) # Output: [0. 0. 0.]
+print(pm.orientation.as_euler('xyz')) # Output: [0. 0. 0.]
 #print(pm.angle) # Output: 0.0
 #print('eje',pm.xis) # Output: [0. 0. 1.]
 #s.move([1,2,3])
@@ -160,49 +162,102 @@ plt.aspect = 1
 #%%
 
 #Calculo del campo en el eje z
-zs = np.linspace(30,300,100)
+
+zi = 30 # Posición inicial en mm
+
+zf = 300 # Posición final en mm
+
+
+zs = np.linspace(zi,zf,100)
 Bs = np.array([pm.getB([0,0,z]) for z in zs] )
 
 
-Bz=Bs[:,2]
+Bzs=Bs[:,2] # Nos quedamos con la componente en z ya que el resto es nulo.
    
 #Graficamos la dependencia del campo con la posición a los largo del eje del imán
 plt.figure(2)
-plt.plot(zs,Bz,'bs')
+plt.plot(zs,Bzs,'bs')
 plt.xlabel("z(mm)")
 plt.ylabel("Bz(T)")
 
 #%%
-#proponemos una función para el ajuste Bz=a/z**k, estudiamos relación logBz vs logz para encontrar k
-#analizar rango de validez del modelo variando el límite de zs
-logzs=np.log10(zs)
-logBz=np.log10(Bz)
 
-X = sm.add_constant(logzs)
-ols_model = sm.OLS(logBz,X)
+'''
+Proponemos una función para el ajuste Bz=a/z**k, estudiamos relación 
+logBz vs logz para encontrar k analizar rango de validez del modelo variando 
+el límite de zs.
+'''
+
+logzs=np.log10(zs)
+logBzs=np.log10(Bzs)
+
+Xs = sm.add_constant(logzs)
+ols_model = sm.OLS(logBzs,Xs)
 results = ols_model.fit()
 o,m=results.params
-#intervalo de confianza para ordenada al origen y pendiente
-oint,mint=results.conf_int(alpha=0.05)
-deltam=abs((mint[1]-mint[0])/2)
-deltao= abs((oint[1]-oint[0])/2)
+
 ajuste=m*logzs+o
-print("pendiente=(", m," +/- ",deltam,") ")
-print("ordenada al origen=(", o," +/- ",deltao,") ")
+print('pendiente=', m)
+print('ordenada al origen=', o)
 print('R^2=',results.rsquared)
 Bajuste=10**ajuste
-#realizamos gráfico y ajuste en escala log-log para 
+#realizamos gráfico y ajuste en escala log-log 
 plt.figure(3)
-plt.plot(zs,Bajuste)
-plt.scatter(zs,Bz)
+plt.plot(zs,Bajuste, 'r', label='Ajuste')
+plt.scatter(zs,Bzs, label = 'Simulación')
 plt.xscale('log')
 plt.yscale('log')
-plt.xlabel('z(mm)');
-plt.ylabel('Bz(T)');
+plt.xlabel('z(mm)')
+plt.ylabel('Bz(T)')
+plt.legend()
+
+#%%
+
+'''
+Cargamos el archivo con mediciones y hacemos el mismo proceso de ajuste
+pero ahora tenemos en cuenta que tienen error.
+'''
+carpeta = '' # Poner ruta de la carpeta con los datos
+
+os.chdir(carpeta)
+
+path = 'nombre_arch.txt' # Nombre del archivo con los datos
+
+datos = np.loadtxt(path)
+
+
+z = datos[:,0]
+
+Bz = datos[:,1]
+
+err_z = 5*np.ones(len(z)) # Poner error en mm
+
+err_Bz = datos[:, 2]
+
+
+logz=np.log10(zs)
+logBz=np.log10(Bzs)
+
+X = sm.add_constant(logz)
+
+ajuste = sm.WLS(logBz, X, weights=1.0 / (err_Bz ** 2))
+resultados = ajuste.fit()
+print(resultados.summary())
+
+
+#realizamos gráfico y ajuste en escala log-log 
+plt.figure(4)
+plt.plot(zs,Bajuste, 'r', label='Ajuste')
+plt.errorbar(z,Bz, yerr=err_Bz, xerr=err_z, label = 'Datos')
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('z(mm)')
+plt.ylabel('Bz(T)')
+plt.legend()
 
 
 
-
-
-
-
+#intervalo de confianza para ordenada al origen y pendiente
+oint,mint=resultados.conf_int(alpha=0.05)
+deltam=abs((mint[1]-mint[0])/2)
+deltao= abs((oint[1]-oint[0])/2)
