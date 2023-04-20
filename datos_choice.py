@@ -50,6 +50,8 @@ t1, v1, t2, v2 = datos_choice(path)
 plt.plot(t1, v1, '.-', label='Canal 1')
 plt.plot(t2, v2, '.-', label='Canal 2')
 plt.legend()
+plt.xlabel('Tiempo [s]')
+plt.ylabel('Voltaje [V]')
 
 
 
