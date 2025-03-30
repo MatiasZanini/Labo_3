@@ -8,6 +8,7 @@ Created on Thu Sep  9 15:17:12 2021
 import numpy as np
 import matplotlib.pyplot as plt
 
+#%%
 # Creamos algunos datos para graficar:
     
 '''
@@ -21,6 +22,7 @@ data1 = np.exp(t) # Exponencial de t
 
 data2 = np.sin(2 * np.pi * t) # seno de 2pi t
 
+#%%
 fig, ax1 = plt.subplots() # Creamos una figura y un conjunto de ejes x e y.
 
 color = 'tab:red' # Definimos una variable con el color rojo.
